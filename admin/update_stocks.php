@@ -1,0 +1,1 @@
+<!-- update stocks using 'value' => isset($users[0])?$users[0]['location']:'' -->
