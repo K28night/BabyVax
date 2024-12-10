@@ -181,12 +181,13 @@
             <span>&#9776;</span>
         </div>
         <ul>
-            <li><a href="#overview">Overview</a></li>
+           
             <li><a href="view_vaccine.php">Vaccination Data</a></li>
             <li><a href="viewcenter.php">Health Center Details</a></li>
             <li><a href="view_unlist_center.php">Request For Approval</a></li>
             <li><a href="view_stocks.php">View Vaccine Stocks</a></li>
             <li><a href="ad_view_request_stock.php">Request For Stocks</a></li>
+            <li><a href="view_slots.php">Vaccine slots Details</a></li>
             <li><a href="ad_view_hisory_request_stock.php">History of Request For Stocks</a></li>
             <li><a href="add_stocks.php">Add Stocks</a></li>
             <li><a href="#reports">Reports</a></li>

@@ -2,7 +2,7 @@
 
 <?php
 $dao=new DataAccess();
-
+$hid=$_GET['hid'];
 ?>
 
 
@@ -48,12 +48,12 @@ $dao=new DataAccess();
    $join=array(
         'b_vaccines as v'=>array('v.vid=s.v_id','join'),
 
-	' hcenters as bt'=>array('bt.hid=s.c_id','join')
+	// 'batch as bt'=>array('bt.batchid=s.batchid','join')
 	
     );  
-$fields=array('bt.hname','v.name','s.date','s.time_slot_1','s.time_slot_2','s.time_slot_3');
+$fields=array('v.name','s.date','s.time_slot_1','s.time_slot_2','s.time_slot_3');
 
-    $users=$dao->selectAsTable($fields,'slots1 as s',1,$join,$actions,$config);
+    $users=$dao->selectAsTable($fields,'slots1 as s',"c_id='$hid'",$join,$actions,$config);
     
     echo $users;
                     

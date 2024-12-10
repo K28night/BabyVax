@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check if the update was successful
     if ($stocks) {
-        echo "<script>alert('updated successfully'); window.location.href='wel_center.php?id=$hid';</script>";
+        echo "<script> window.location.href='wel_center.php?id=$hid';</script>";
     } else {
         echo "<script>alert('Error updating.'); window.location.href='wel_center.php?id=$hid';</script>";
     }

@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check if the update was successful
     if ($vaccines) {
-        echo "<script>alert('Request status updated successfully'); window.location.href='ad_view_request_stock.php';</script>";
+        echo "<script> window.location.href='ad_view_request_stock.php';</script>";
     } else {
         echo "<script>alert('Error updating Request status.'); window.location.href='ad_view_request_stock.php';</script>";
     }

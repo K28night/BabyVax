@@ -217,14 +217,15 @@ $dao = new DataAccess();
         </div>
 <!-- <?php   $id = $_GET['id'];?> -->
         <ul>
-            <li><a href="#overview">Overview</a></li>
+            
             <li><a href="view_vaccine.php?hid=<?= $hid ?>">Vaccine Data</a></li>
-            <li><a href="viewcenter.php">Health Center Details</a></li>
+            <li><a href="hc_profile.php?id=<?= $hid ?>">Health Center Details</a></li>
             <li><a href="view_baby.php?hid=<?= $hid ?>">Baby Records</a></li>
             <li><a href="c_view_appointment.php?hid=<?= $hid ?>">Appoinments</a></li>
             <li><a href="view_hc_stock.php?hid=<?= $hid ?>">Send Request For Stocks</a></li>
             <li><a href="hc_view_request_stock.php?hid=<?= $hid ?>">Stock Request History</a></li>
             <li><a href="view_appointment_history.php?hid=<?= $hid ?>">Vaccination History</a></li>
+            <li><a href="view_slots.php?hid=<?= $hid ?>">Vaccine slots Details</a></li>
             <!-- <li><a href="add_slots.php">Add Slots</a></li> -->
             <li><a href="#reports">Reports</a></li>
         </ul>
