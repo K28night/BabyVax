@@ -1,11 +1,15 @@
 <?php 
 require('../config/autoload.php'); 
 
-$pid=$_GET['pid'];
-if(isset($_GET['?id']))
+
+if(isset($_GET['?id'])){
 $vid=$_GET['?id'];
-else
-$vid=NULL;
+$pid=$_GET['pid'];}
+else{
+    header("Location: p_login.php");
+    
+}
+
 
 
 

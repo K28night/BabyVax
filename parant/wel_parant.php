@@ -34,8 +34,8 @@ $dao = new DataAccess();
             <li><a href="appoinment.php?pid=<?= $pid ?>">Make Appoinment</a></li>
             <li><a href="p_view_appointment.php?pid=<?= $pid ?>">Appoinment History</a></li>
             <li><a href="p_view_baby.php?pid=<?= $pid ?>">My Baby's Records</a></li>
-            <li><a href="view_appointment_history.php?hid=<?= $pid ?>">Vaccination History</a></li>
-            <li><a href="viewcenter.php?pid=<?= $pid ?>">Health Centers</a></li>
+            <li><a href="../admin/view_history.php?pid=<?= $pid ?>">Vaccination History</a></li>
+            <li><a href="../health_center/viewcenter.php?pid=<?= $pid ?>">Health Centers</a></li>
             
             <li><a href="#reports">Reports</a></li>
         </ul>

@@ -93,7 +93,7 @@ $dao = new DataAccess();
 <body>
 
 <div class="container_gray_bg" id="home_feat_1">
-    <h1>Listed Health Centers</h1>
+    <h1>Health Centers</h1>
     <div class="row">
         <div class="col-md-10">
             <table class="table">

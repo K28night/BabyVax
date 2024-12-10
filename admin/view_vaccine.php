@@ -1,6 +1,6 @@
 <?php 
 require('../config/autoload.php'); 
-$hid=$_GET['hid'];
+
 $dao = new DataAccess(); 
 ?>
 
@@ -97,24 +97,24 @@ $dao = new DataAccess();
                         <th>Booster Required</th>
                         <th>Vaccine Type</th>
                         <th>Administration Method</th>
-                        <th>Actions</th>
+                        
                     </tr>
 
                     <?php
                     // Define the actions for edit and delete
                     $actions = array(
-                        'edit' => array(
-                            'label' => 'Edit',
-                            'link' => 'editvaccine.php?hid='.$hid.'&',
-                            'params' => array('id' => 'vid'),
-                            'attributes' => array('class' => 'btn btn-success')
-                        ),
-                        'delete' => array(
-                            'label' => 'Delete',
-                            'link' => 'deletevaccine.php?hid='.$hid.'&',
-                            'params' => array('id' => 'vid'),
-                            'attributes' => array('class' => 'btn btn-success')
-                        )
+                        // 'edit' => array(
+                        //     'label' => 'Edit',
+                        //     'link' => 'editvaccine.php',
+                        //     'params' => array('id' => 'vid'),
+                        //     'attributes' => array('class' => 'btn btn-success')
+                        // ),
+                        // 'delete' => array(
+                        //     'label' => 'Delete',
+                        //     'link' => 'deletevaccine.php',
+                        //     'params' => array('id' => 'vid'),
+                        //     'attributes' => array('class' => 'btn btn-success')
+                        // )
                     );
 
                     // Configure the table

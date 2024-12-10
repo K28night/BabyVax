@@ -68,13 +68,14 @@ if (isset($_POST["btn_login"])) {
        
     } */
     .login{
+     
         /* width: 300px;
         display: flex;
         justify-content: center;
        text-align: center;
        padding: 15em;
        margin: auto;
-       background-color: aquamarine;
+      
        width: 100px;
        height: 60px;
       flex-direction: row;
@@ -94,9 +95,10 @@ if (isset($_POST["btn_login"])) {
   width: 100%;
 }
 form{
-    width: 350px;
+
+    width: 370px;
     top:0;
-    height: 350px;
+    height: 390px;
     background-color: rgba(0, 0, 20, 0.5);
     padding: 15px;
     margin-left: auto;
@@ -132,6 +134,16 @@ a{
     text-decoration: none;
     color: aliceblue;
 }
+.button {
+            background-color: #04AA6D;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
 </style>
 
 <!DOCTYPE html>
@@ -153,6 +165,8 @@ a{
             <div class="error"><?= $validator->error('password'); ?></div><br><br>
             <a href="#">Forgot Your Password?</a><br>
             <button type="submit" name="btn_login" name="Login">Login</button>
+            <button name="button" type="button" onclick="window.location.href='registration.php'">Signin</button>
+
         </form>
     </div>
 </body>
