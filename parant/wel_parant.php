@@ -37,7 +37,7 @@ $dao = new DataAccess();
             <li><a href="../admin/view_history.php?pid=<?= $pid ?>">Vaccination History</a></li>
             <li><a href="../health_center/viewcenter.php?pid=<?= $pid ?>">Health Centers</a></li>
             
-            <li><a href="#reports">Reports</a></li>
+            <li><a href="display.php?pid=<?= $pid ?>">Reports</a></li>
         </ul>
     </div>
 

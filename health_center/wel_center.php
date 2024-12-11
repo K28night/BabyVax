@@ -227,7 +227,7 @@ $dao = new DataAccess();
             <li><a href="view_appointment_history.php?hid=<?= $hid ?>">Vaccination History</a></li>
             <li><a href="view_slots.php?hid=<?= $hid ?>">Vaccine slots Details</a></li>
             <!-- <li><a href="add_slots.php">Add Slots</a></li> -->
-            <li><a href="#reports">Reports</a></li>
+            <li><a href="display.php?hid=<?= $hid ?>">Reports</a></li>
         </ul>
     </div>
 
