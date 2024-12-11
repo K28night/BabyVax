@@ -26,10 +26,11 @@ $validator = new FormValidator($rules, $labels);
 if (isset($_POST["btn_login"])) {
     if ($validator->validate($_POST)) {
         $email = $_POST['email'];
-        $password = trim($_POST['password']);
+        $password=trim($_POST['password']);
+        
         $data1=array(
             'username' => $email,
-            'pass' =>  $password,
+            'pass' =>  password_hash($password, PASSWORD_DEFAULT),
             'time'=>'CURRENT_TIMESTAMP',
         );  
         // Query to check user existence
@@ -37,31 +38,34 @@ if (isset($_POST["btn_login"])) {
         $fields = array('pid', 'password');
         $user = $dao->getData($fields, 'registration', $condition);
         if ($user) {
-            $hashed_password_from_db =trim($user[0]['password']);
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            $id=$user[0]['pid'];
+            $hashed_password_from_db = $user[0]['password']; // Get the hashed password from the DB
+            $id = $user[0]['pid']; // Get the user ID
+            var_dump($password);  // The password entered by the user
+            var_dump($hashed_password_from_db);  // The password hash from the database
+            // Verify the password entered by the user
             if (password_verify($password, $hashed_password_from_db)==false) {
-                // Login success password_verify($password, $hashed_password_from_db)
-                if($dao->insert($data1,'p_login'))
-                echo "<script>alert('Login successful'); window.location.href='wel_parant.php?id=$id';</script>";
-                // header("Location: wel_center.php");
-
-                // window.location.href='add_slots.php';
-                // Redirect to the dashboard or start a session here
+                // Login success
+                if ($dao->insert($data1, 'p_login')) {
+                    echo "<script>
+                        alert('Login successful');
+                        window.location.href='wel_parant.php?id=$id';
+                    </script>";
+                }
             } else {
+                // Incorrect password
                 echo "<script>
-                alert('Incorrect Password.');
-                setTimeout(function() {
-                    window.location.href = 'p_login.php'; // Change 'login.php' to your target page
-                }, 2000); // Redirect after 2 seconds
-            </script>";
-               
+                    alert('Incorrect Password.$hashed_password_from_db');
+                    setTimeout(function() {
+                        window.location.href = 'p_login.php';
+                    }, 2000); // Redirect after 2 seconds
+                </script>";
             }
         } else {
-            echo "<script>alert('Application Pending...!');</script>";
+            // No user found or application pending
+            echo "<script>alert('Incorrect Email...!');</script>";
         }
     }
-}
+}        
 ?>
 <style>
 /* *{

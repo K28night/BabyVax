@@ -28,9 +28,9 @@ $labels = array(
 $rules = array(
     "pname" => array("required" => true, "minlength" => 3, "maxlength" => 30, "alphaspaceonly" => true),
     "address" => array("required" => true, "minlength" => 1, "maxlength" => 30),
-    "pin" => array("required" => true, "minlength" => 1, "maxlength" => 20),
+    "pin" => array("required" => true, "minlength" => 4, "maxlength" => 20, "integeronly" => true),
     "phno" => array("required" => true, "minlength" => 10, "maxlength" => 10, "integeronly" => true),
-    "email" => array("required" => true, "maxlength" => 50),
+    "email" => array("required" => true, "maxlength" => 50,"email"=>true),
     "city" => array("required" => true, "minlength" => 4, "maxlength" => 50),
     "password" => array("required" => true, "minlength" => 8, "maxlength" => 20) // Added validation for password
 );
@@ -60,32 +60,61 @@ if (isset($_POST["btn_insert"])) {
 <html>
 <head>
     <style>
-        h2{
+       h2 {
             text-align: center;
             margin-top: 20px;
             font-size: 30px;
         }
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Flexbox for vertical and horizontal alignment */
+            justify-content: center;
             align-items: center;
+            
         }
-        form{
-         
-        }
-        input{
-            margin-bottom: 10px;
-
-        }
-        select{
-            margin-bottom: 10px;
-        }
-        .form{
+        .form-container {
             display: flex;
-          align-items: center;
-          justify-content: center;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
         }
-        button{
-            place-items: center;
+        .form {
+            width: 500px;
+            background: #f9f9f9;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 14px;
+            background-color: #28a745;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
@@ -96,7 +125,7 @@ if (isset($_POST["btn_insert"])) {
     <div class="row">
         <div class="col-md-6">
             Parent Name:
-            <?= $form->textBox('pname', array('class' => 'form-control', 'value' => '')); ?>
+            <?= $form->textBox('pname', array('class' => 'form-control', 'value' => '',"placeholder"=>'Enter Name')); ?>
             <?= $validator->error('pname'); ?>
         </div>
     </div>
@@ -104,7 +133,7 @@ if (isset($_POST["btn_insert"])) {
     <div class="row">
         <div class="col-md-6">
             Address:
-            <?= $form->textBox('address', array('class' => 'form-control', 'value' => '')); ?>
+            <?= $form->textArea('address', array('class' => 'form-control', 'placeholder' => 'Enter address', 'rows' => 4)); ?>
             <?= $validator->error('address'); ?>
         </div>
     </div>
@@ -112,7 +141,7 @@ if (isset($_POST["btn_insert"])) {
     <div class="row">
         <div class="col-md-6">
             Email:
-            <?= $form->textBox('email', array('class' => 'form-control', 'value' => '')); ?>
+            <?= $form->textBox('email', array('class' => 'form-control', 'value' => '',"placeholder"=>'Enter Email')); ?>
             <?= $validator->error('email'); ?>
         </div>
     </div>
@@ -120,7 +149,7 @@ if (isset($_POST["btn_insert"])) {
     <div class="row">
         <div class="col-md-6">
             Phone Number:
-            <?= $form->textBox('phno', array('class' => 'form-control', 'value' => '')); ?>
+            <?= $form->textBox('phno', array('class' => 'form-control', 'value' => '',"placeholder"=>'Enter Phone Number')); ?>
             <?= $validator->error('phno'); ?>
         </div>
     </div>
@@ -128,7 +157,7 @@ if (isset($_POST["btn_insert"])) {
     <div class="row">
         <div class="col-md-6">
             Pin Code:
-            <?= $form->textBox('pin', array('class' => 'form-control', 'value' => '')); ?>
+            <?= $form->textBox('pin', array('class' => 'form-control', 'value' => '',"placeholder"=>'Enter Pin code')); ?>
             <?= $validator->error('pin'); ?>
         </div>
     </div>
@@ -138,6 +167,7 @@ if (isset($_POST["btn_insert"])) {
             Taluk:
             <?php
             $options = $dao->createOptions("location", "location", "hcenters");
+            $options = array('Select City' => '') + $options;
             echo $form->dropDownList('city', array('class' => 'form-control', 'value' => '','selected'=>'svefvwv'), $options);
             ?>
             <?= $validator->error('city'); ?>
@@ -147,7 +177,7 @@ if (isset($_POST["btn_insert"])) {
     <div class="row">
         <div class="col-md-6">
             Password:  <!-- New password field -->
-            <?= $form->textBox('password', array('class' => 'form-control', 'type' => 'password', 'value' => '')); ?>
+            <?= $form->textBox('password', array('class' => 'form-control', 'type' => 'password', 'value' => '',"placeholder"=>'Enter Password')); ?>
             <?= $validator->error('password'); ?>
         </div>
     </div>

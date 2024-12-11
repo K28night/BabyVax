@@ -40,7 +40,27 @@ class FormValidator
 			}
 			foreach($rules as $ruleName=>$ruleValue)
 			{
-				if($ruleName=="required")
+				if ($ruleName == "date_up_to_today") {
+					if (!empty($this->data[$field])) {
+						
+						$inputDate = $this->data[$field];
+						$currentDate = date('Y-m-d'); // Get today's date in 'Y-m-d' format
+	
+						// Compare input date with today's date
+						if ($inputDate > $currentDate) {
+							$this->_flag = false;
+							if (isset($this->labels[$field])) {
+								$this->_errors[$field] = $this->labels[$field] . " cannot be in the future";
+							} else {
+								$this->_errors[$field] = "$field cannot be in the future";
+							}
+							break;
+						}
+					}
+					else
+					$this->_errors[$field]=" $field dfngmtrm";
+				}
+				else if($ruleName=="required")
 				{
 					if(isset($this->data[$field]))
 					{
@@ -72,6 +92,7 @@ class FormValidator
 						break;
 					}
 				}
+				
 				else if($ruleName == "minlength")
 				{
 					//echo gettype($ruleValue);
@@ -608,11 +629,11 @@ class FormValidator
 							$this->_flag=false;
 							if(isset($this->labels[$field]))
 							{
-								$this->_errors[$field]=$this->labels[$field]." shouldn't be less than ".date('m-d-Y',$from);
+								$this->_errors[$field]="not be less than ".date('d-m-Y',$from);
 							}
 							else
 							{
-								$this->_errors[$field]=$field." shouldn't be less than ".date('m-d-Y',$from);
+								$this->_errors[$field]=" shouldn't be less than ".date('m-d-Y',$from);
 							}
 							break;
 						}

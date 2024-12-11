@@ -2,8 +2,8 @@
 require('../config/autoload.php'); 
 
 
-if(isset($_GET['?id'])){
-$vid=$_GET['?id'];
+if(isset($_GET['pid'])){
+$vid=0;
 $pid=$_GET['pid'];}
 else{
     header("Location: p_login.php");
@@ -26,9 +26,9 @@ $elements = array(
     "b_id" => "",
     "b_name" => "",
     "c_id" => "",
-    "c_name" => "",
+ 
     "v_id" => "",
-    "v_name" => "",
+ 
     "date" => "",
     "time_slot" => ""
 );
@@ -43,9 +43,9 @@ $labels = array(
     "b_id" => "Child ID",
     "b_name" => "Child Name",
     "c_id" => "Center ID",
-    "c_name" => "Center Name",
+ 
     "v_id" => "Vaccine ID",
-    "v_name" => "Vaccine Name112",
+ 
     "date" => "Date",
     "time_slot" => "Time Slot"
 );
@@ -54,12 +54,17 @@ $rules = array(
     "p_id" => array("required" => true),
     "p_name" => array("required" => true),
     "b_id" => array("required" => true),
-    "b_name" => array("required" => true),
+    "b_name" => array("required" => true,),
     "c_id" => array("required" => true),
-    "c_name" => array("required" => true),
     "v_id" => array("required" => true),
-    "v_name" => array("required" => true),
-    "date" => array("required" => true),
+    
+    "date" => [
+        "required" => true,
+        "date" => [
+            "from" => date('Y-m-d'),
+            "to" => "2025-12-31"
+        ]
+        ],
     "time_slot" => array("required" => true)
 );
 
@@ -67,15 +72,18 @@ $validator = new FormValidator($rules, $labels);
 
 if (isset($_POST["btn_book"])) {
     if ($validator->validate($_POST)) {
+        
         // Formatting the date to Y-m-d
-        $date = DateTime::createFromFormat('d-m-Y', $_POST['date']);
-        $formatted_date = $date->format('Y-m-d'); 
+        $appointment_date = $_POST['date'];
+
         $center_id = $_POST['c_id'];
         $vaccine_id = $_POST['v_id'];
         $time_slot = $_POST['time_slot'];
+        $hname = $dao->getData('hname', 'hcenters', "hid='$center_id'");
+$vname=$dao->getData("name",'b_vaccines',"vid='$vaccine_id'");
 
         // Check slot availability based on center, vaccine, time slot, and date
-        $condition = "c_id=$center_id AND v_id=$vaccine_id  AND is_available=1 AND time_slot_1='$time_slot' OR time_slot_2='$time_slot' OR time_slot_3='$time_slot'"; 
+        $condition = "c_id=$center_id AND v_id=$vaccine_id AND is_available=1 AND (time_slot_1='$time_slot' OR time_slot_2='$time_slot' OR time_slot_3='$time_slot')";
         $availability = $dao->getData($fields='*', 'slots1', $condition);
 
         if ($availability) {
@@ -86,10 +94,10 @@ if (isset($_POST["btn_book"])) {
                 'b_id' => $_POST['b_id'],
                 'b_name' => $_POST['b_name'],
                 'v_id' => $vaccine_id,
-                'v_name' => $_POST['v_name'],
+                'v_name' => $vname[0]['name'],
                 'c_id' => $center_id,
-                'c_name' => $_POST['c_name'],
-                'date' => $formatted_date,
+                'c_name' => $hname[0]['hname'],
+                'date' => $appointment_date,
                 'time_slot' => $time_slot,
                 'status' => "booked"
             );
@@ -99,13 +107,13 @@ if (isset($_POST["btn_book"])) {
                 // $update_data = array('is_available' => 0); // Mark slot as unavailable
                 // $update_condition = "c_id=$center_id AND v_id=$vaccine_id AND time_slot='$time_slot'";
                 // $dao->update($update_data, "slots1", $update_condition);
-                echo "<script>alert('Appointment booked successfully');</script>";
+                echo "<script>alert('Appointment booked successfully $current_date');</script>";
                 header("location:wel_parant.php?id=$pid");
             } else {
                 echo "<script>alert('Error: Failed to book appointment.');</script>";
             }
         } else {
-            echo "<script>alert('Selected time slot is not available. Please choose a different slot.');</script>";
+            echo "<script>alert('Selected slot is not available. Please choose a different slot.');</script>";
         }
     }
 }
@@ -144,11 +152,11 @@ if (isset($_POST["btn_book"])) {
            
         }
         .form1{
-            width: 50%;
+            width: 60%;
             filter: drop-shadow(offset-x offset-y blur-radius #333);
             background-color:mediumseagreen;
             border-radius: 80px;
-            height: 390px;
+            height: 60%;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1);
             position:fixed;
            top:15%;
@@ -186,8 +194,8 @@ if (isset($_POST["btn_book"])) {
   text-decoration: none;
   user-select: none;
   position: relative;
-  top: 430px;
-  left: 0;
+  top: 320px;
+  left: 50px;
   -webkit-user-select: none;
   touch-action: manipulation;
   vertical-align: middle;
@@ -291,10 +299,11 @@ if (isset($_POST["btn_book"])) {
 <link href="https://fonts.googleapis.com/css2?family=Faculty+Glyphic&display=swap" rel="stylesheet">
 </head>
 <body>
+   
     <h2>Appointment Booking</h2>
     <div class="form">
         <div class="form1">
-<form action="" method="POST">
+<form  id="appointmentForm" action="" method="POST">
     <!-- Parent ID -->
     <div class="row">
         <div class="col-md-6">
@@ -334,7 +343,7 @@ if (isset($_POST["btn_book"])) {
     <!-- Center ID -->
     <div class="row">
         <div class="col-md-6">
-        <label>Center ID:</label>
+        <label>Center Name:</label>
             <?php
             $options = $dao->createOptions("hname", "hid", "hcenters","approve_ad=1");
             $firstOption = array('Select a Center' => '');  // Default first option
@@ -345,68 +354,30 @@ if (isset($_POST["btn_book"])) {
         </div>
     </div>
 
-    <!-- Center Name -->
-    <div class="row">
-        <div class="col-md-6">
-        <label>Center Name:</label>
-            <?php
-            $options = $dao->createOptions("hname", "hname", "hcenters","approve_ad=1");
-            $firstOption = array('Select a Center' => '');  // Default first option
-            $options = array_merge($firstOption, $options);
-            echo $form->dropDownList('c_name', array('class' => 'form-control'), $options);
-            ?>
-            <?= $validator->error('c_name'); ?>
-        </div>
-    </div>
-
     <!-- Vaccine ID -->
     <div class="row">
-        <div class="col-md-6">
-        <label>Vaccine ID:</label>
-            <?php
-            $options = $dao->createOptions("name", "vid", "b_vaccines");
-            $firstOption = array('Select a Vaccine' => '');  // Default first option
-            $options = array_merge($firstOption, $options);
-            $selectedValue='';
-
-            echo $form->dropDownList(
-                'v_id',                    // Name of the dropdown
-                $selectedValue, // Default selected value
-                $options,                  // Options for the dropdown
-                array('class' => 'form-control')); // HTML options
-            ?>
-            <?= $validator->error('v_id'); ?>
-        </div>
-    </div>
-
-    <!-- Vaccine Name -->
-    <div class="row">
-        <div class="col-md-6">
+    <div class="col-md-6">
         <label>Vaccine Name:</label>
-            <?php
-            $options = $dao->createOptions("name", "name", "b_vaccines");
-            $firstOption = array('Select a Vaccine' => '');  // Default first option
-            $options = array_merge($firstOption, $options);
-            $selectedValue = ''; 
-            echo $form->dropDownList(
-                'v_name',                    // Name of the dropdown
-                $selectedValue,            // Default selected value
-                $options,                  // Options for the dropdown
-                array('class' => 'form-control','value'=>'')); // HTML options
-            ?>
-            
-            <?= $validator->error('v_name'); ?>
-        </div>
+        <?php
+        $options = $dao->createOptions("name", "vid", "b_vaccines");
+        $firstOption = array('Select a Vaccine' => '');  // Default first option
+        $options = array_merge($firstOption, $options);
+        echo $form->dropDownList('v_id', array('class' => 'form-control'), $options);
+        ?>
+        <?= $validator->error('v_id'); ?>
     </div>
+</div>
 
-    <!-- Date -->
-    <div class="row">
-        <div class="col-md-6">
+
+
+<!-- Appointment Date -->
+<div class="row">
+    <div class="col-md-6">
         <label>Date:</label>
-            <?= $form->textBox('date', array('class' => 'form-control','value'=>"", 'placeholder' => 'dd-mm-yyyy')); ?>
-            <?= $validator->error('date'); ?>
-        </div>
+        <?= $form->textBox('date', array('type' => 'date','value'=>'', 'class'=>'form-control')); ?>
+        <?= $validator->error('date'); ?>
     </div>
+</div>
 
     <!-- Time Slot -->
     <div class="row">
@@ -427,10 +398,19 @@ if (isset($_POST["btn_book"])) {
 </form>
 </div>
 <!-- JavaScript to handle real-time form validation -->
-<script>
-    $(document).ready(function() {
-        // Implement real-time data handling here
+
+   <script>
+    document.getElementById('appointmentForm').addEventListener('submit', function (e) {
+        var appointmentDate = new Date(document.getElementById('date').value);
+        var currentDate = new Date();
+
+        // Check if the appointment date is in the past
+        if (appointmentDate < currentDate) {
+            alert("The appointment date cannot be in the past");
+            e.preventDefault(); // Prevent form submission
+        }
     });
+
 </script>
 
 </body>
