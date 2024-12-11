@@ -190,7 +190,7 @@
             <li><a href="view_slots.php">Vaccine slots Details</a></li>
             <li><a href="ad_view_hisory_request_stock.php">History of Request For Stocks</a></li>
             <li><a href="add_stocks.php">Add Stocks</a></li>
-            <li><a href="#reports">Reports</a></li>
+            <li><a href="display.php">Reports</a></li>
         </ul>
     </div>
 
