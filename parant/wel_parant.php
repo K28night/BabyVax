@@ -17,11 +17,7 @@ $dao = new DataAccess();
     <title>Parent Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="welcome.css">
-    <style>
-    /* Global Styles */
 
-
-    </style>
 </head>
 <body>
     <div class="sidebar" id="sidebar">
@@ -29,14 +25,15 @@ $dao = new DataAccess();
             <span>&#9776;</span>
         </div>
         <ul>
-            <li><a href="#overview">Overview</a></li>
+            
             <li><a href="p_view_vaccine.php?pid=<?= $pid ?>">Vaccine Information</a></li>
             <li><a href="appoinment.php?pid=<?= $pid ?>">Make Appoinment</a></li>
             <li><a href="p_view_appointment.php?pid=<?= $pid ?>">Appoinment History</a></li>
             <li><a href="p_view_baby.php?pid=<?= $pid ?>">My Baby's Records</a></li>
             <li><a href="../admin/view_history.php?pid=<?= $pid ?>">Vaccination History</a></li>
             <li><a href="../health_center/viewcenter.php?pid=<?= $pid ?>">Health Centers</a></li>
-            
+            <li><a href="submit_side_effect.php?pid=<?= $pid ?>">Report side effects</a></li>
+            <li><a href="viewside.php?pid=<?= $pid ?>">View Submited Report</a></li>
             <li><a href="display.php?pid=<?= $pid ?>">Reports</a></li>
         </ul>
     </div>

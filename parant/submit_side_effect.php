@@ -1,127 +1,91 @@
 <?php 
 require('../config/autoload.php'); 
 
-
+$dao = new DataAccess();
 if(isset($_GET['pid'])){
-$vid=0;
 $pid=$_GET['pid'];}
 else{
     header("Location: p_login.php");
-    
 }
 
-
-
-
-$time_slots = [
-    '09:00 - 11:00',
-    '12:00 - 01:00',
-    '03:00 - 05:00'
-];
-
+if (empty($dao->count('id', 'appointments', "status='completed' AND p_id=$pid"))) {
+    echo "<script>alert('First Take vaccination Then Send Report');</script>";
+    echo "<script>window.location.href='wel_parant.php?id=$pid';</script>";
+    exit; // Ensure no further script execution
+}
 // Form elements for appointment data
 $elements = array(
     "p_id" => "",
-    "p_name" => "",
     "b_id" => "",
-    "b_name" => "",
-    "c_id" => "",
- 
     "v_id" => "",
- 
-    "date" => "",
-    "time_slot" => ""
+  "side_effects" => "",
+  
+   
 );
-
 $form = new FormAssist($elements, $_POST);
-$dao = new DataAccess();
+
 $eva = $dao->getData('*', 'baby_details', "pid='$pid'");
-$va=$dao->getData("*",'b_vaccines',"vid='$vid'");
+
 $labels = array(
     "p_id" => "Parent ID",
-    "p_name" => "Parent Name",
     "b_id" => "Child ID",
-    "b_name" => "Child Name",
     "c_id" => "Center ID",
- 
     "v_id" => "Vaccine ID",
- 
-    "date" => "Date",
-    "time_slot" => "Time Slot"
+    "side_effects" => " Side Effects"
 );
 
 $rules = array(
     "p_id" => array("required" => true),
-    "p_name" => array("required" => true),
     "b_id" => array("required" => true),
-    "b_name" => array("required" => true,),
-    "c_id" => array("required" => true),
     "v_id" => array("required" => true),
-    
-    "date" => [
-        "required" => true,
-        "date" => [
-            "from" => date('Y-m-d'),
-            "to" => "2025-12-31"
-        ]
-        ],
-    "time_slot" => array("required" => true)
+    "side_effects" => array("required" => true)
 );
 
 $validator = new FormValidator($rules, $labels);
 
 if (isset($_POST["btn_book"])) {
     if ($validator->validate($_POST)) {
-        
         // Formatting the date to Y-m-d
-        $appointment_date = $_POST['date'];
-
-        $center_id = $_POST['c_id'];
+      
+      
         $vaccine_id = $_POST['v_id'];
-        $time_slot = $_POST['time_slot'];
-        $hname = $dao->getData('hname', 'hcenters', "hid='$center_id'");
+     
+    
 $vname=$dao->getData("name",'b_vaccines',"vid='$vaccine_id'");
 
         // Check slot availability based on center, vaccine, time slot, and date
-        $condition = "c_id=$center_id AND v_id=$vaccine_id AND is_available=1 AND (time_slot_1='$time_slot' OR time_slot_2='$time_slot' OR time_slot_3='$time_slot')";
-        $availability = $dao->getData($fields='*', 'slots1', $condition);
+       
 
-        if ($availability) {
+      
             // If available, book the slot
             $data = array(
-                'p_id' => $_POST['p_id'],
-                'p_name' => $_POST['p_name'],
-                'b_id' => $_POST['b_id'],
-                'b_name' => $_POST['b_name'],
-                'v_id' => $vaccine_id,
-                'v_name' => $vname[0]['name'],
-                'c_id' => $center_id,
-                'c_name' => $hname[0]['hname'],
-                'date' => $appointment_date,
-                'time_slot' => $time_slot,
-                'status' => "booked"
+                'parent_id' => $_POST['p_id'],
+                'baby_id' => $_POST['b_id'],
+                'vaccine_id' => $vaccine_id,
+                'side_effects' => $_POST['side_effects'],
+                'report_date'=>'CURRENT_TIMESTAMP',
             );
 
-            if ($dao->insert($data, "appointments")) {
+            if ($dao->insert($data, "reported_side_effects")) {
                 // Update the slot availability
                 // $update_data = array('is_available' => 0); // Mark slot as unavailable
                 // $update_condition = "c_id=$center_id AND v_id=$vaccine_id AND time_slot='$time_slot'";
                 // $dao->update($update_data, "slots1", $update_condition);
-                echo "<script>alert('Appointment booked successfully $current_date');</script>";
+                echo "<script>alert('Successfully Added');</script>";
                 header("location:wel_parant.php?id=$pid");
             } else {
-                echo "<script>alert('Error: Failed to book appointment.');</script>";
-            }
-        } else {
-            echo "<script>alert('Selected slot is not available. Please choose a different slot.');</script>";
-        }
+                echo "<script>alert('Error: Execution Failed.');</script>";
+            }}
+        // } else {
+        //     echo "<script>alert('Selected slot is not available. Please choose a different slot.');</script>";
+        // }
     }
-}
+
 ?>
 
 <html>
 <head>
-    <title>Appointment Booking</title>
+    <title>Send A report</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -293,6 +257,16 @@ $vname=$dao->getData("name",'b_vaccines',"vid='$vaccine_id'");
     box-shadow: none; 
   }
 }
+text{
+    margin-left: 10px;
+}
+textarea{
+    margin-left: 20%;
+    margin-top: 2%;
+    height: 40%;
+    width: 60%;
+    border: none;
+}
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -300,7 +274,7 @@ $vname=$dao->getData("name",'b_vaccines',"vid='$vaccine_id'");
 </head>
 <body>
    
-    <h2>Appointment Booking</h2>
+    <h2>Send A Side-Effect Report</h2>
     <div class="form">
         <div class="form1">
 <form  id="appointmentForm" action="" method="POST">
@@ -313,14 +287,7 @@ $vname=$dao->getData("name",'b_vaccines',"vid='$vaccine_id'");
         </div>
     </div>
 
-    <!-- Parent Name -->
-    <div class="row">
-        <div class="col-md-6">
-        <label> Parent Name:</label>
-            <?= $form->textBox('p_name', array('class'=>'form-control','value'=>$eva[0]['parent_names'],'placeholder'=>"Enter Parant Name")); ?>
-            <?= $validator->error('p_name'); ?>
-        </div>
-    </div>
+
 
     <!-- Child ID -->
     <div class="row">
@@ -331,35 +298,16 @@ $vname=$dao->getData("name",'b_vaccines',"vid='$vaccine_id'");
         </div>
     </div>
 
-    <!-- Child Name -->
-    <div class="row">
-        <div class="col-md-6">
-        <label>Child Name:</label>
-            <?= $form->textBox('b_name', array('class'=>'form-control','value'=>$eva[0]['name'],'placeholder'=>"Enter Baby Name")); ?>
-            <?= $validator->error('b_name'); ?>
-        </div>
-    </div>
 
-    <!-- Center ID -->
-    <div class="row">
-        <div class="col-md-6">
-        <label>Center Name:</label>
-            <?php
-            $options = $dao->createOptions("hname", "hid", "hcenters","approve_ad=1");
-            $firstOption = array('Select a Center' => '');  // Default first option
-            $options = array_merge($firstOption, $options);
-            echo $form->dropDownList('c_id', array('class' => 'form-control'), $options);
-            ?>
-            <?= $validator->error('c_id'); ?>
-        </div>
-    </div>
 
     <!-- Vaccine ID -->
     <div class="row">
     <div class="col-md-6">
         <label>Vaccine Name:</label>
         <?php
-        $options = $dao->createOptions("name", "vid", "b_vaccines");
+        $v=$dao->getData('v_id','appointments',"p_id=$pid");
+        $vi=$v[0]['v_id'];
+        $options = $dao->createOptions("name", "vid", "b_vaccines","vid=$vi");
         $firstOption = array('Select a Vaccine' => '');  // Default first option
         $options = array_merge($firstOption, $options);
         echo $form->dropDownList('v_id', array('class' => 'form-control'), $options);
@@ -370,31 +318,18 @@ $vname=$dao->getData("name",'b_vaccines',"vid='$vaccine_id'");
 
 
 
-<!-- Appointment Date -->
-<div class="row">
-    <div class="col-md-6">
-        <label>Date:</label>
-        <?= $form->textBox('date', array('type' => 'date','value'=>'', 'class'=>'form-control','placeholder'=>'YYYY-MM-DD')); ?>
-        <?= $validator->error('date'); ?>
-    </div>
-</div>
 
     <!-- Time Slot -->
     <div class="row">
         <div class="col-md-6">
-        <label>Time Slot:</label>
-            <select name="time_slot" class="form-control">
-                <option value="">Select Time Slot</option>
-                <?php foreach ($time_slots as $slot) : ?>
-                    <option value="<?= $slot; ?>"><?= $slot; ?></option>
-                <?php endforeach; ?>
-            </select>
-            <?= $validator->error('time_slot'); ?>
+      
+        <?= $form->textArea('side_effects', array('class'=>'form-control','value'=>'','placeholder'=>"Enter Side Effects",'col'=>5)); ?>
+            <?= $validator->error('side_effects'); ?>
         </div>
     </div>
 
   </div>
-    <button type="submit" name="btn_book" class="button-3">Book Appointment</button>
+    <button type="submit" name="btn_book" class="button-3">Submit Report</button>
 </form>
 </div>
 <!-- JavaScript to handle real-time form validation -->

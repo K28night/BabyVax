@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<?php
+require('../config/autoload.php'); ?> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -203,15 +204,19 @@
         <div class="cards">
             <div class="card">
                 <h3>Total Health Centers</h3>
-                <p>15 Centers</p>
+                <?php $dao=new DataAccess();
+                $c=$dao->count("hid","hcenters",1);
+                
+                ?>
+                <p><?php echo $c; ?> Centers</p>
             </div>
             <div class="card">
                 <h3>Total Vaccines</h3>
-                <p>25 Vaccines</p>
+                <p><?php $d=$dao->count("vid","b_vaccines",1); echo $d; ?> Vaccines</p>
             </div>
             <div class="card">
                 <h3>Total Appointments</h3>
-                <p>120 Appointments</p>
+                <p><?php $f=$dao->count("id","appointments","status='Completed' OR status='booked'"); echo $f; ?> Appointments</p>
             </div>
         </div>
         <!-- Dashboard charts -->
