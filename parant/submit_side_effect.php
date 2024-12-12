@@ -286,9 +286,6 @@ textarea{
             <?= $validator->error('p_id'); ?>
         </div>
     </div>
-
-
-
     <!-- Child ID -->
     <div class="row">
         <div class="col-md-6">
@@ -297,9 +294,6 @@ textarea{
             <?= $validator->error('b_id'); ?>
         </div>
     </div>
-
-
-
     <!-- Vaccine ID -->
     <div class="row">
     <div class="col-md-6">
